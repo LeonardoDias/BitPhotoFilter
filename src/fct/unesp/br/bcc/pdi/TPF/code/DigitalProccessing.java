@@ -11,6 +11,98 @@ public class DigitalProccessing {
 	public static final int channelG = 1;
 	public static final int channelB = 2;
 	
+	public static PGM rotate90Degrees(PGM image){
+		int matrix[][] = new int[image.getWidth()][image.getHeight()];
+		int widthBound = image.getWidth()-1;
+		
+		for (int j = 0; j < image.getHeight(); j++ )
+			for(int i = 0; i < image.getWidth(); i++)
+				matrix[widthBound-i][j] = image.getMatrix()[j][i];
+		PGM retorno = new PGM(image.getType(), image.getHeight(), image.getWidth(), image.getMaxScale());
+		retorno.setMatrix(matrix);
+		return retorno;
+	}
+	
+	public static PPM rotate90Degrees(PPM image){
+		int matrix[][][] = new int[3][image.getWidth()][image.getHeight()];
+		int redMatrix[][] = matrix[0];
+		int greenMatrix[][] = matrix[1];
+		int blueMatrix[][] = matrix[2];
+		int widthBound = image.getWidth()-1;
+		
+		for (int j = 0; j < image.getHeight(); j++ )
+			for(int i = 0; i < image.getWidth(); i++){
+				redMatrix[widthBound-i][j] = image.getRedMatrix()[j][i];
+				greenMatrix[widthBound-i][j] = image.getGreenMatrix()[j][i];
+				blueMatrix[widthBound-i][j] = image.getBlueMatrix()[j][i];
+			}
+		PPM retorno = new PPM(image.getType(), image.getHeight(), image.getWidth(), image.getMaxScale());
+		retorno.setMatrix(matrix);
+		return retorno;
+	}
+	
+	public static PGM rotate180Degrees(PGM image){
+		int matrix[][] = new int[image.getHeight()][image.getWidth()];
+		int heightBound = image.getHeight()-1;
+		int widthBound = image.getWidth()-1;
+
+		for (int j = 0; j < image.getHeight(); j++ )
+			for(int i = 0; i < image.getWidth(); i++)
+				matrix[heightBound-j][widthBound-i] = image.getMatrix()[j][i];
+		PGM retorno = new PGM(image.getType(), image.getWidth(), image.getHeight(), image.getMaxScale());
+		retorno.setMatrix(matrix);
+		return retorno;
+	}
+	
+	public static PPM rotate180Degrees(PPM image){
+		int matrix[][][] = new int[3][image.getHeight()][image.getWidth()];
+		int redMatrix[][] = matrix[0];
+		int greenMatrix[][] = matrix[1];
+		int blueMatrix[][] = matrix[2];
+		int widthBound = image.getWidth()-1;
+		int heightBound = image.getHeight()-1;
+		
+		for (int j = 0; j < image.getHeight(); j++ )
+			for(int i = 0; i < image.getWidth(); i++){
+				redMatrix[heightBound-j][widthBound-i] = image.getRedMatrix()[j][i];
+				greenMatrix[heightBound-j][widthBound-i] = image.getGreenMatrix()[j][i];
+				blueMatrix[heightBound-j][widthBound-i] = image.getBlueMatrix()[j][i];
+			}				
+		PPM retorno = new PPM(image.getType(), image.getWidth(), image.getHeight(), image.getMaxScale());
+		retorno.setMatrix(matrix);
+		return retorno;
+	}
+	
+	public static PGM rotateMinus90Degrees(PGM image){
+		int matrix[][] = new int[image.getWidth()][image.getHeight()];
+		int heightBound = image.getHeight()-1;
+		
+		for (int j = 0; j < image.getHeight(); j++ )
+			for(int i = 0; i < image.getWidth(); i++)
+				matrix[i][heightBound-j] = image.getMatrix()[j][i];
+		PGM retorno = new PGM(image.getType(), image.getHeight(), image.getWidth(), image.getMaxScale());
+		retorno.setMatrix(matrix);
+		return retorno;
+	}
+	
+	public static PPM rotateMinus90Degrees(PPM image){
+		int matrix[][][] = new int[3][image.getWidth()][image.getHeight()];
+		int redMatrix[][] = matrix[0];
+		int greenMatrix[][] = matrix[1];
+		int blueMatrix[][] = matrix[2];
+		int heightBound = image.getHeight()-1;
+		
+		for (int j = 0; j < image.getHeight(); j++ )
+			for(int i = 0; i < image.getWidth(); i++){
+				redMatrix[i][heightBound-j] = image.getRedMatrix()[j][i];
+				greenMatrix[i][heightBound-j] = image.getGreenMatrix()[j][i];
+				blueMatrix[i][heightBound-j] = image.getBlueMatrix()[j][i];
+			}
+		PPM retorno = new PPM(image.getType(), image.getHeight(), image.getWidth(), image.getMaxScale());
+		retorno.setMatrix(matrix);
+		return retorno;
+	}
+	
 	public static PGM negative(PGM image){
 		int matrix[][] = new int[image.getHeight()][image.getWidth()];
 		for (int j = 0; j < image.getHeight(); j++ )
