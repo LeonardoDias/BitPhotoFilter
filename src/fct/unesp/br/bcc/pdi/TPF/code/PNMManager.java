@@ -62,6 +62,48 @@ public class PNMManager {
 		return images.get(0);
 	}
 	
+	public void rotate90Degrees(){
+		if(getImage() instanceof PGM)
+			addImage(
+					DigitalProccessing.rotate90Degrees((PGM)getImage()));
+		else
+			addImage(
+					DigitalProccessing.rotate90Degrees((PPM)getImage()));
+	}
+	
+	public void rotateMinus90Degrees(){
+		if(getImage() instanceof PGM)
+			addImage(
+					DigitalProccessing.rotateMinus90Degrees((PGM)getImage()));
+	}
+	
+	public void rotate180Degrees(){
+		if(getImage() instanceof PGM)
+			addImage(
+					DigitalProccessing.rotate180Degrees((PGM)getImage()));
+		else
+			addImage(
+					DigitalProccessing.rotate180Degrees((PPM)getImage()));
+	}
+	
+	public void flipHorizontal(){
+		if(getImage() instanceof PGM)
+			addImage(
+					DigitalProccessing.flipHorizontal((PGM)getImage()));
+		else
+			addImage(
+					DigitalProccessing.flipHorizontal((PPM)getImage()));
+	}
+	
+	public void flipVertical(){
+		if(getImage() instanceof PGM)
+			addImage(
+					DigitalProccessing.flipVertical((PGM)getImage()));
+		else
+			addImage(
+					DigitalProccessing.flipVertical((PPM)getImage()));
+	}
+	
 	public void negative(){
 		if(getImage() instanceof PGM)
 			addImage(	
