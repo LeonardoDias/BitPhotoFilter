@@ -119,6 +119,12 @@ public class PNMManager {
 					DigitalProccessing.grayScaleReductionTo(((PGM)getImage()), newGrayScaleValue));
 	}
 	
+	public void rgbScaleReductionTo(int newRGBScaleValue){
+		if(getImage() instanceof PPM)
+			addImage(
+					DigitalProccessing.rgbScaleReductionTo(((PPM)getImage()), newRGBScaleValue));
+	}
+	
 	public void negative(){
 		if(getImage() instanceof PGM)
 			addImage(	

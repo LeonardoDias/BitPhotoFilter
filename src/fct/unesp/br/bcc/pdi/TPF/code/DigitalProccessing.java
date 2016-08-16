@@ -216,6 +216,30 @@ public class DigitalProccessing {
 		return retorno;
 	}
 	
+	public static PPM rgbScaleReductionTo(PPM image, int newRGBScaleValue){
+		if(newRGBScaleValue >  image.getMaxScale())
+			throw new InvalidParameterException("The parameter has to be smaller than image rgbscale");
+		
+		int matrix[][][] = new int[3][image.getHeight()][image.getWidth()];
+		int redMatrix[][] = matrix[0];
+		int greenMatrix[][] = matrix[1];
+		int blueMatrix[][] = matrix[2];
+		
+		for (int j = 0; j < image.getHeight(); j++ )
+			for(int i = 0; i < image.getWidth(); i++){
+				redMatrix[j][i] = Math.round((float)image.getRedMatrix()[j][i] * (float) newRGBScaleValue 
+						/ (float)image.getMaxScale());
+				greenMatrix[j][i] = Math.round((float)image.getGreenMatrix()[j][i] * (float) newRGBScaleValue 
+						/ (float)image.getMaxScale());
+				blueMatrix[j][i] = Math.round((float)image.getBlueMatrix()[j][i] * (float) newRGBScaleValue 
+						/ (float)image.getMaxScale());
+			}
+		
+		PPM retorno = new PPM(image.getType(), image.getWidth(), image.getHeight(), newRGBScaleValue);
+		retorno.setMatrix(matrix);
+		return retorno;
+	}
+	
 	public static PGM negative(PGM image){
 		int matrix[][] = new int[image.getHeight()][image.getWidth()];
 		for (int j = 0; j < image.getHeight(); j++ )
