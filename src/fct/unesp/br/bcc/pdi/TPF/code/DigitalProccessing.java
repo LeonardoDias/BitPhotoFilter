@@ -3,6 +3,7 @@ package fct.unesp.br.bcc.pdi.TPF.code;
 import java.security.InvalidParameterException;
 
 import fct.unesp.br.bcc.pdi.TPF.fileTypes.PGM;
+import fct.unesp.br.bcc.pdi.TPF.fileTypes.PNM;
 import fct.unesp.br.bcc.pdi.TPF.fileTypes.PPM;
 
 public class DigitalProccessing {
@@ -161,6 +162,41 @@ public class DigitalProccessing {
 				blueMatrix[heightBound - j][i] = image.getBlueMatrix()[j][i];
 			}
 		PPM retorno = new PPM(image.getType(), image.getWidth(), image.getHeight(), image.getMaxScale());
+		retorno.setMatrix(matrix);
+		return retorno;
+	}
+	
+	public static PGM BinarizationByPoint(PGM image, int binaryPoint){
+		if(binaryPoint < 0 || binaryPoint > image.getMaxScale())
+			throw new InvalidParameterException();
+		
+		int matrix[][] = new int[image.getHeight()][image.getWidth()];
+		
+		for (int j = 0; j < image.getHeight(); j++ )
+			for(int i = 0; i < image.getWidth(); i++)
+				matrix[j][i] = (image.getMatrix()[j][i] > binaryPoint)?
+						image.getMaxScale():0;
+						
+		PGM retorno = new PGM(image.getType(), image.getWidth(), image.getHeight(), image.getMaxScale());
+		retorno.setMatrix(matrix);
+		return retorno;
+	}
+	
+	public static PGM BinarizationByPoint(PPM image, int binaryPoint){
+		if(binaryPoint < 0 || binaryPoint > image.getMaxScale())
+			throw new InvalidParameterException();
+		
+		int matrix[][] = new int[image.getHeight()][image.getWidth()];
+		
+		for (int j = 0; j < image.getHeight(); j++ )
+			for(int i = 0; i < image.getWidth(); i++){
+				int pixelSingleValue = (image.getRedMatrix()[j][i] + image.getGreenMatrix()[j][i] + 
+						image.getBlueMatrix()[j][i]) / 3;
+				matrix[j][i] = (pixelSingleValue > binaryPoint)?
+						image.getMaxScale():0;
+			}
+						
+		PGM retorno = new PGM(PNM.PGMASCII, image.getWidth(), image.getHeight(), image.getMaxScale());
 		retorno.setMatrix(matrix);
 		return retorno;
 	}
