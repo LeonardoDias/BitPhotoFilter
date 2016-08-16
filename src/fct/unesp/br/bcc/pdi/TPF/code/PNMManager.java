@@ -104,13 +104,19 @@ public class PNMManager {
 					DigitalProccessing.flipVertical((PPM)getImage()));
 	}
 	
-	public void BinarizationByPoint(int binaryPoint){
+	public void binarizationByPoint(int binaryPoint){
 		if(getImage() instanceof PGM)
 			addImage(
-					DigitalProccessing.BinarizationByPoint(((PGM)getImage()), binaryPoint));
+					DigitalProccessing.binarizationByPoint(((PGM)getImage()), binaryPoint));
 		else
 			addImage(
-					DigitalProccessing.BinarizationByPoint(((PPM)getImage()), binaryPoint));
+					DigitalProccessing.binarizationByPoint(((PPM)getImage()), binaryPoint));
+	}
+	
+	public void grayScaleReductionTo(int newGrayScaleValue){
+		if(getImage() instanceof PGM)
+			addImage(
+					DigitalProccessing.grayScaleReductionTo(((PGM)getImage()), newGrayScaleValue));
 	}
 	
 	public void negative(){

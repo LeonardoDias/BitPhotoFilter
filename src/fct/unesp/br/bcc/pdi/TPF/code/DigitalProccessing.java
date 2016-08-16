@@ -166,7 +166,7 @@ public class DigitalProccessing {
 		return retorno;
 	}
 	
-	public static PGM BinarizationByPoint(PGM image, int binaryPoint){
+	public static PGM binarizationByPoint(PGM image, int binaryPoint){
 		if(binaryPoint < 0 || binaryPoint > image.getMaxScale())
 			throw new InvalidParameterException();
 		
@@ -182,7 +182,7 @@ public class DigitalProccessing {
 		return retorno;
 	}
 	
-	public static PGM BinarizationByPoint(PPM image, int binaryPoint){
+	public static PGM binarizationByPoint(PPM image, int binaryPoint){
 		if(binaryPoint < 0 || binaryPoint > image.getMaxScale())
 			throw new InvalidParameterException();
 		
@@ -197,6 +197,21 @@ public class DigitalProccessing {
 			}
 						
 		PGM retorno = new PGM(PNM.PGMASCII, image.getWidth(), image.getHeight(), image.getMaxScale());
+		retorno.setMatrix(matrix);
+		return retorno;
+	}
+	
+	public static PGM grayScaleReductionTo(PGM image, int newGrayScaleValue){
+		if(newGrayScaleValue >  image.getMaxScale())
+			throw new InvalidParameterException("The parameter has to be smaller than image grayscale");
+		
+		int matrix[][] = new int[image.getHeight()][image.getWidth()];
+		
+		for (int j = 0; j < image.getHeight(); j++ )
+			for(int i = 0; i < image.getWidth(); i++)
+				matrix[j][i] = Math.round((float)image.getMatrix()[j][i] * (float) newGrayScaleValue / (float)image.getMaxScale());
+		
+		PGM retorno = new PGM(image.getType(), image.getWidth(), image.getHeight(), newGrayScaleValue);
 		retorno.setMatrix(matrix);
 		return retorno;
 	}
