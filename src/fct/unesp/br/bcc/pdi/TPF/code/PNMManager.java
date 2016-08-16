@@ -113,16 +113,13 @@ public class PNMManager {
 					DigitalProccessing.binarizationByPoint(((PPM)getImage()), binaryPoint));
 	}
 	
-	public void grayScaleReductionTo(int newGrayScaleValue){
+	public void scaleReductionTo(int newScaleValue){
 		if(getImage() instanceof PGM)
 			addImage(
-					DigitalProccessing.grayScaleReductionTo(((PGM)getImage()), newGrayScaleValue));
-	}
-	
-	public void rgbScaleReductionTo(int newRGBScaleValue){
-		if(getImage() instanceof PPM)
+					DigitalProccessing.grayScaleReductionTo(((PGM)getImage()), newScaleValue));
+		else
 			addImage(
-					DigitalProccessing.rgbScaleReductionTo(((PPM)getImage()), newRGBScaleValue));
+					DigitalProccessing.rgbScaleReductionTo(((PPM)getImage()), newScaleValue));
 	}
 	
 	public void negative(){
