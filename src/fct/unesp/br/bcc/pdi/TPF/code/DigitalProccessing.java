@@ -240,6 +240,159 @@ public class DigitalProccessing {
 		return retorno;
 	}
 	
+	public static PGM enlargeScaleResolution(PGM image, float scaleValue){
+		if(scaleValue < 1)
+			throw new InvalidParameterException("Scale must be greater than 1");
+		
+		int newWidth = Math.round(image.getWidth()*scaleValue);
+		int newHeight = Math.round(image.getHeight()*scaleValue);
+		int matrix[][] = new int[newHeight][newWidth];
+		
+		if(scaleValue >= 1)
+			for (int j = 0; j < image.getHeight(); j++)
+				for(int i = 0; i < image.getWidth(); i++)
+					for (int k = 0; k < scaleValue; k++ )
+						for(int l = 0; l < scaleValue; l++)
+							if((j*scaleValue)+k < newHeight && (i*scaleValue)+l < newWidth)
+								matrix[(int)(j*scaleValue)+k][(int)(i*scaleValue)+l] = image.getMatrix()[j][i];
+		
+		PGM retorno = new PGM(image.getType(), newWidth, newHeight, image.getMaxScale());
+		retorno.setMatrix(matrix);
+		return retorno;
+	}
+	
+	public static PPM enlargeScaleResolution(PPM image, float scaleValue){
+		if(scaleValue < 1)
+			throw new InvalidParameterException("Scale must be greater than 1");
+		
+		int newWidth = Math.round(image.getWidth()*scaleValue);
+		int newHeight = Math.round(image.getHeight()*scaleValue);
+		int matrix[][][] = new int[3][newHeight][newWidth];
+		int redMatrix[][] = matrix[0];
+		int greenMatrix[][] = matrix[1];
+		int blueMatrix[][] = matrix[2];
+		
+		for (int j = 0; j < image.getHeight(); j++)
+			for(int i = 0; i < image.getWidth(); i++)
+				for (int k = 0; k < scaleValue; k++ )
+					for(int l = 0; l < scaleValue; l++)
+						if((j*scaleValue)+k < newHeight && (i*scaleValue)+l < newWidth){
+							redMatrix[(int)(j*scaleValue)+k][(int)(i*scaleValue)+l] = image.getRedMatrix()[j][i];
+							greenMatrix[(int)(j*scaleValue)+k][(int)(i*scaleValue)+l] = image.getGreenMatrix()[j][i];
+							blueMatrix[(int)(j*scaleValue)+k][(int)(i*scaleValue)+l] = image.getBlueMatrix()[j][i];
+						}
+		
+		PPM retorno = new PPM(image.getType(), newWidth, newHeight, image.getMaxScale());
+		retorno.setMatrix(matrix);
+		return retorno;
+	}
+	
+	public static PGM compressScaleResolutionIn(PGM image, float scaleValue){
+		if(scaleValue < 1)
+			throw new InvalidParameterException("Scale must be greater than 1");
+		
+		int newWidth = Math.round(image.getWidth()/scaleValue);
+		int newHeight = Math.round(image.getHeight()/scaleValue);
+		int matrix[][] = new int[newHeight][newWidth];
+		int media;
+		int pixelsCounted;
+		
+		for (int j = 0; j < image.getHeight(); j+=scaleValue)
+			for(int i = 0; i < image.getWidth(); i+=scaleValue){
+				media = 0;
+				pixelsCounted = 0;
+				for (int k = 0; k < scaleValue; k++ )
+					for(int l = 0; l < scaleValue; l++){
+						if(j+k < newHeight && i+l < newWidth){
+							media += image.getMatrix()[j+k][i+l];
+							pixelsCounted++;
+						}else if(j+k < newHeight){
+							media += image.getMatrix()[j+k][i];
+							pixelsCounted++;
+						}else if(i+l < newWidth){
+							media += image.getMatrix()[j][i+l];
+							pixelsCounted++;
+						}
+						else{
+							media += image.getMatrix()[j][i];
+							pixelsCounted++;
+						}
+							
+					}
+				if(pixelsCounted>0)
+					media = media/pixelsCounted;
+				
+				matrix[(int) (j/scaleValue)][((int)(i/scaleValue))] = media;
+			}
+		
+		PGM retorno = new PGM(image.getType(), newWidth, newHeight, image.getMaxScale());
+		retorno.setMatrix(matrix);
+		return retorno;
+	}
+	
+	public static PPM compressScaleResolutionIn(PPM image, float scaleValue){
+		if(scaleValue < 1)
+			throw new InvalidParameterException("Scale must be greater than 1");
+		
+		int newWidth = Math.round(image.getWidth()/scaleValue);
+		int newHeight = Math.round(image.getHeight()/scaleValue);
+		int matrix[][][] = new int[3][newHeight][newWidth];
+		int redMatrix[][] = matrix[0];
+		int greenMatrix[][] = matrix[1];
+		int blueMatrix[][] = matrix[2];
+		int mediaRedChannel;
+		int mediaGreenChannel;
+		int mediaBlueChannel;
+		int pixelsCounted;
+		
+		for (int j = 0; j < image.getHeight(); j+=scaleValue)
+			for(int i = 0; i < image.getWidth(); i+=scaleValue){
+				mediaRedChannel = 0;
+				mediaGreenChannel = 0;
+				mediaBlueChannel = 0;
+				pixelsCounted = 0;
+				for (int k = 0; k < scaleValue; k++ )
+					for(int l = 0; l < scaleValue; l++){
+						if(j+k < newHeight && i+l < newWidth){
+							mediaRedChannel += image.getRedMatrix()[j+k][i+l];
+							mediaGreenChannel += image.getGreenMatrix()[j+k][i+l];
+							mediaBlueChannel += image.getBlueMatrix()[j+k][i+l];
+							pixelsCounted++;
+						}else if(j+k < newHeight){
+							mediaRedChannel += image.getRedMatrix()[j+k][i];
+							mediaGreenChannel += image.getGreenMatrix()[j+k][i];
+							mediaBlueChannel += image.getBlueMatrix()[j+k][i];
+							pixelsCounted++;
+						}else if(i+l < newWidth){
+							mediaRedChannel += image.getRedMatrix()[j][i+l];
+							mediaGreenChannel += image.getGreenMatrix()[j][i+l];
+							mediaBlueChannel += image.getBlueMatrix()[j][i+l];
+							pixelsCounted++;
+						}
+						else{
+							mediaRedChannel += image.getRedMatrix()[j][i];
+							mediaGreenChannel += image.getGreenMatrix()[j][i];
+							mediaBlueChannel += image.getBlueMatrix()[j][i];
+							pixelsCounted++;
+						}
+							
+					}
+				if(pixelsCounted>0){
+					mediaRedChannel = mediaRedChannel/pixelsCounted;
+					mediaGreenChannel = mediaGreenChannel/pixelsCounted;
+					mediaBlueChannel = mediaBlueChannel/pixelsCounted;
+				}
+				
+				redMatrix[(int) (j/scaleValue)][((int)(i/scaleValue))] = mediaRedChannel;
+				greenMatrix[(int) (j/scaleValue)][((int)(i/scaleValue))] = mediaGreenChannel;
+				blueMatrix[(int) (j/scaleValue)][((int)(i/scaleValue))] = mediaBlueChannel;
+			}
+		
+		PPM retorno = new PPM(image.getType(), newWidth, newHeight, image.getMaxScale());
+		retorno.setMatrix(matrix);
+		return retorno;
+	}
+	
 	public static PGM negative(PGM image){
 		int matrix[][] = new int[image.getHeight()][image.getWidth()];
 		for (int j = 0; j < image.getHeight(); j++ )

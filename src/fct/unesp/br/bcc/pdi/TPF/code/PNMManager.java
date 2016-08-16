@@ -122,6 +122,24 @@ public class PNMManager {
 					DigitalProccessing.rgbScaleReductionTo(((PPM)getImage()), newScaleValue));
 	}
 	
+	public void enlargeScaleResolutionIn(float scaleValue){
+		if(getImage() instanceof PGM)
+			addImage(
+					DigitalProccessing.enlargeScaleResolution(((PGM)getImage()), scaleValue));
+		else
+			addImage(
+					DigitalProccessing.enlargeScaleResolution(((PPM)getImage()), scaleValue));
+	}
+	
+	public void compressScaleResolutionIn(float scaleValue){
+		if(getImage() instanceof PGM)
+			addImage(
+					DigitalProccessing.compressScaleResolutionIn(((PGM)getImage()), scaleValue));
+		else
+			addImage(
+					DigitalProccessing.compressScaleResolutionIn(((PPM)getImage()), scaleValue));
+	}
+	
 	public void negative(){
 		if(getImage() instanceof PGM)
 			addImage(	
