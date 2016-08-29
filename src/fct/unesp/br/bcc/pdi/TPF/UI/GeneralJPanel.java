@@ -4,7 +4,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Group;
 import javax.swing.JPanel;
 
-public abstract class GeneralJPanel extends JPanel implements Runnable{
+public abstract class GeneralJPanel extends JPanel{
 
 	/**
 	 * 
@@ -14,12 +14,11 @@ public abstract class GeneralJPanel extends JPanel implements Runnable{
 	protected GroupLayout layout;
 	protected Group verticalGroup;
 	protected Group horizontalGroup;
-	protected int FPS;
+
 	
 	public GeneralJPanel(){
 		super();
 		layout = new GroupLayout(this);
-		FPS = 60;
 		init();
 		initComponents();
 		setComponents();
@@ -32,8 +31,6 @@ public abstract class GeneralJPanel extends JPanel implements Runnable{
 	public abstract void initComponents();
 
 	public abstract void setComponents();
-	
-	public abstract void draw();
 	
 	private void setLayout(){
 		setLayout(layout);
@@ -55,18 +52,6 @@ public abstract class GeneralJPanel extends JPanel implements Runnable{
 
 	public void setHorizontalGroup(Group horizontalGroup) {
 		this.horizontalGroup = horizontalGroup;
-	}
-	
-	@Override
-	public void run(){
-		while(true){
-			try {
-				Thread.sleep(1000/FPS);
-			} catch (InterruptedException e) {
-				
-			}
-			draw();
-		}
 	}
 	
 }

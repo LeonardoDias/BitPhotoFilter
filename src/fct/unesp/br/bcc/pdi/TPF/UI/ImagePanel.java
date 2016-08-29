@@ -9,20 +9,21 @@ import fct.unesp.br.bcc.pdi.TPF.fileTypes.PGM;
 import fct.unesp.br.bcc.pdi.TPF.fileTypes.PNM;
 import fct.unesp.br.bcc.pdi.TPF.fileTypes.PPM;
 
-public class imagePanel extends GeneralJPanel{
+public class ImagePanel extends GeneralJPanel implements Runnable{
 
 	private static final long serialVersionUID = -4292658222164789208L;
 	private Graphics2D graphics;
 	private BufferedImage image;
 	private PNM pnm;
 	private boolean hasAlteration;
+	private int FPS;
 	
 	@Override
 	public void init() {
+		FPS = 60;
 		graphics = null;
 		image = null;
 		pnm = null;
-		hasAlteration = true;
 	}
 
 	@Override
@@ -40,7 +41,6 @@ public class imagePanel extends GeneralJPanel{
 		this.pnm = pnm;
 	}
 
-	@Override
 	public void draw() {
 		
 		if(hasAlteration){
@@ -101,5 +101,15 @@ public class imagePanel extends GeneralJPanel{
 	
 	public void hasAlteration(){
 		hasAlteration = true;
+	}
+	
+	@Override
+	public void run(){
+		while(true){
+			try {
+				Thread.sleep(1000/FPS);
+			} catch (InterruptedException e) {}
+			draw();
+		}
 	}
 }
