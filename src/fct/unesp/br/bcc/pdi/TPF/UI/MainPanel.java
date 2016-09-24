@@ -6,6 +6,8 @@ import javax.swing.GroupLayout.Group;
 import javax.swing.JScrollPane;
 
 import fct.unesp.br.bcc.pdi.TPF.code.PNMManager;
+import fct.unesp.br.bcc.pdi.TPF.fileTypes.PNM;
+import java.io.IOException;
 
 public class MainPanel extends GeneralJPanel{
 	
@@ -36,11 +38,14 @@ public class MainPanel extends GeneralJPanel{
 		Group verticalGroup = layout.createSequentialGroup();
 		Group horizontalGroup = layout.createParallelGroup();
 		
-		verticalGroup.addComponent(menuPanel, 20, 20, 20);
+		verticalGroup.addComponent(menuPanel, 30, 30, 30);
 		verticalGroup.addComponent(imagePanelJSP, 100, 100, Integer.MAX_VALUE);
 		
 		horizontalGroup.addComponent(menuPanel, 0, 0, Integer.MAX_VALUE);
-		horizontalGroup.addComponent(imagePanelJSP,100,100,Integer.MAX_VALUE);
+		horizontalGroup.addGroup(layout.createSequentialGroup()
+				.addGap(5)
+				.addComponent(imagePanelJSP,100,100,Integer.MAX_VALUE)
+				.addGap(5));
 		
 		setVerticalGroup(verticalGroup);
 		setHorizontalGroup(horizontalGroup);
@@ -53,7 +58,7 @@ public class MainPanel extends GeneralJPanel{
 		manager.openImage(fileToOpen);
 		updateImage();
 		
-		GUIFrame.setSize(new Dimension(manager.getImage().getWidth()+5, manager.getImage().getHeight()+5));
+		GUIFrame.setSize(new Dimension(manager.getImage().getWidth(), manager.getImage().getHeight()));
 		GUIFrame.setTitle("BitPhotoFilter - ".concat(fileToOpen));
 		
 		if(!imagePanelRefreshThread.isAlive())
@@ -70,5 +75,14 @@ public class MainPanel extends GeneralJPanel{
 		((ImagePanel) imagePanel).setImage(manager.getOriginalImage());
 		((ImagePanel) imagePanel).hasAlteration();
 	}
+
+        public void saveImage(String filePath) throws IOException {
+            manager.saveImage(filePath);
+            
+        }
+
+        public PNM getImage() {
+            return manager.getImage();
+        }
 
 }

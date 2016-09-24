@@ -161,6 +161,16 @@ public class PPM extends PNM{
 		}
 		FH.closeWriterFile();
 	}
+        
+        public void saveFileGrey(String file) throws IOException {
+            PGM retorno = new PGM(PNM.PGMASCII, getWidth(), getHeight(), getMaxScale());
+		int matrix[][] = new int[getHeight()][getWidth()];
+		for(int j = 0; j < getHeight(); j++)
+			for(int i = 0; i < getWidth(); i++)
+                            matrix[j][i] = (getRedMatrix()[j][i] + getGreenMatrix()[j][i]+ getBlueMatrix()[j][i])/3;
+            retorno.setMatrix(matrix);
+            retorno.saveFile(file);
+        }
 	
 	public void saveFileRed(String file) throws IOException {
 		getRedImage().saveFile(file);
@@ -231,4 +241,5 @@ public class PPM extends PNM{
 	public void setMaxScale(int maxScale) {
 		this.maxScale = maxScale;
 	}
+
 }

@@ -512,5 +512,302 @@ public class DigitalProccessing {
 		retorno.setMatrix(matrix);
 		return retorno;
 	}
+        
+        public static PGM dark(PGM image, int quantity){
+		int matrix[][] = new int[image.getHeight()][image.getWidth()];
+		int new_value;
+		for (int j = 0; j < image.getHeight(); j++ )
+			for(int i = 0; i < image.getWidth(); i++){
+				new_value = image.getMatrix()[j][i] - quantity;
+				matrix[j][i] = new_value<0?0:new_value;
+			}
+                
+		PGM retorno = new PGM(image.getType(), image.getWidth(), image.getHeight(), image.getMaxScale());
+		retorno.setMatrix(matrix);
+                
+                return retorno;
+	}
+	
+	public static PPM dark(PPM image, int quantity){
+		int matrix[][][] = new int[image.getHeight()][image.getWidth()][3];
+		int new_value;
+		for (int j = 0; j < image.getHeight(); j++ )
+			for(int i = 0; i < image.getWidth(); i++){
+				new_value = image.getMatrix()[j][i][0] - quantity;
+				matrix[j][i][0] = new_value<0?0:new_value;
+				new_value = image.getMatrix()[j][i][1] - quantity;
+				matrix[j][i][1] = new_value<0?0:new_value;
+				new_value = image.getMatrix()[j][i][2] - quantity;
+				matrix[j][i][2] = new_value<0?0:new_value;
+			}
+                
+		PPM retorno = new PPM(image.getType(), image.getWidth(), image.getHeight(), image.getMaxScale());
+		retorno.setMatrix(matrix);
+                
+                return retorno;
+	}
+	
+	public static PPM dark(PPM image, int quantity, int channel){
+		int matrix[][][] = image.getMatrix();
+		int new_value;
+		for (int j = 0; j < image.getHeight(); j++ )
+			for(int i = 0; i < image.getWidth(); i++){
+				new_value = image.getMatrix()[j][i][channel] - quantity;
+				matrix[j][i][channel] = new_value<0?0:new_value;
+			}
+                
+		PPM retorno = new PPM(image.getType(), image.getWidth(), image.getHeight(), image.getMaxScale());
+		retorno.setMatrix(matrix);
+                
+                return retorno;
+	}
+	
+	public static PGM dark(PGM image, float quantity){
+		int matrix[][] = new int[image.getHeight()][image.getWidth()];
+		for (int j = 0; j < image.getHeight(); j++ )
+			for(int i = 0; i < image.getWidth(); i++)
+				matrix[j][i] = Math.round(image.getMatrix()[j][i] / quantity);
+                
+		PGM retorno = new PGM(image.getType(), image.getWidth(), image.getHeight(), image.getMaxScale());
+		retorno.setMatrix(matrix);
+                
+                return retorno;
+	}
+        
+        public static PGM spacialFilter(PGM image, int[][] matrixSpace){
+		int matrix[][] = new int[image.getHeight()][image.getWidth()];//image.getMatrix();
+		int matrixSpaceValue = matrixSpace.length;
+		//float filterScale = (float) Math.pow(matrixSpaceValue, (-2));
+		int pixelsReaden;
+		//center of the matrixSpace
+		int center = matrixSpaceValue/2;
+		
+		//value for the newPixel
+		float pixelValue;
+		
+		for (int j = 0; j < image.getHeight(); j++ ){
+			for(int i = 0; i < image.getWidth(); i++){
+				pixelValue = 0;
+				pixelsReaden = 0;
+				for(int k = 0; k < center+1; k++)
+					for(int l = 0; l < center+1; l++){
+						if(l != 0 && k != 0){
+							if(i + l < image.getWidth() && j + k < image.getHeight()){
+								pixelValue += image.getMatrix()[j+k][i+l] * matrixSpace[center+k][center+l];
+								pixelsReaden++;
+							}
+							if(i - l >= 0 && j + k < image.getHeight()){
+								pixelValue += image.getMatrix()[j+k][i-l] * matrixSpace[center+k][center-l];
+								pixelsReaden++;
+							}
+							if(j - k >= 0 && i + l < image.getWidth()){
+								pixelValue += image.getMatrix()[j-k][i+l] * matrixSpace[center-k][center+l];
+								pixelsReaden++;
+							}
+							if(i - l >= 0 && j - k >= 0 ){
+								pixelValue += image.getMatrix()[j-k][i-l] * matrixSpace[center-k][center-l];
+								pixelsReaden++;
+							}
+						}
+							
+						else if(k != 0){
+							if(j + k < image.getHeight()){
+								pixelValue += image.getMatrix()[j+k][i] * matrixSpace[center+k][center];
+								pixelsReaden++;
+							}
+							if(j - k >= 0){
+								pixelValue += image.getMatrix()[j-k][i] * matrixSpace[center-k][center];
+								pixelsReaden++;
+							}
+						}
+						
+						else if(l != 0){
+							if(i + l < image.getWidth()){
+								pixelValue += image.getMatrix()[j][i+l] * matrixSpace[center][center+l];
+								pixelsReaden++;
+							}
+							if(i - l >= 0){
+								pixelValue += image.getMatrix()[j][i-l] * matrixSpace[center][center-l];
+								pixelsReaden++;
+							}
+						}
+						else{
+							pixelValue += image.getMatrix()[j][i] * matrixSpace[center][center];
+							pixelsReaden++;
+						}
+					}
+				matrix[j][i] = Math.round(pixelValue / (float) pixelsReaden);
+				if(matrix[j][i] < 0)
+					matrix[j][i] = 0;
+			}
+		}
+		PGM retorno = new PGM(image.getType(), image.getWidth(), image.getHeight(), image.getMaxScale());
+		retorno.setMatrix(matrix);
+                
+                return retorno;
+	}
+        
+        public static PPM spacialFilter(PPM image, int[][] matrixSpace){
+		int matrix[][][] = new int[3][image.getHeight()][image.getWidth()];//image.getMatrix();
+		int matrixSpaceValue = matrixSpace.length;
+		//float filterScale = (float) Math.pow(matrixSpaceValue, (-2));
+		int pixelsReaden;
+		//center of the matrixSpace
+		int center = matrixSpaceValue/2;
+		
+		//value for the newPixel
+		float pixelValueR;
+                float pixelValueG;
+                float pixelValueB;
+		
+		for (int j = 0; j < image.getHeight(); j++ ){
+			for(int i = 0; i < image.getWidth(); i++){
+				pixelValueR = 0;
+                                pixelValueG = 0;
+                                pixelValueB = 0;
+				pixelsReaden = 0;
+				for(int k = 0; k < center+1; k++)
+					for(int l = 0; l < center+1; l++){
+						if(l != 0 && k != 0){
+							if(i + l < image.getWidth() && j + k < image.getHeight()){
+								pixelValueR += image.getMatrix()[0][j+k][i+l] * matrixSpace[center+k][center+l];
+                                                                pixelValueG += image.getMatrix()[1][j+k][i+l] * matrixSpace[center+k][center+l];
+                                                                pixelValueB += image.getMatrix()[2][j+k][i+l] * matrixSpace[center+k][center+l];
+								pixelsReaden++;
+							}
+							if(i - l >= 0 && j + k < image.getHeight()){
+								pixelValueR += image.getMatrix()[0][j+k][i-l] * matrixSpace[center+k][center-l];
+                                                                pixelValueG += image.getMatrix()[1][j+k][i-l] * matrixSpace[center+k][center-l];
+                                                                pixelValueB += image.getMatrix()[2][j+k][i-l] * matrixSpace[center+k][center-l];
+								pixelsReaden++;
+							}
+							if(j - k >= 0 && i + l < image.getWidth()){
+								pixelValueR += image.getMatrix()[0][j-k][i+l] * matrixSpace[center-k][center+l];
+                                                                pixelValueG += image.getMatrix()[1][j-k][i+l] * matrixSpace[center-k][center+l];
+                                                                pixelValueB += image.getMatrix()[2][j-k][i+l] * matrixSpace[center-k][center+l];
+								pixelsReaden++;
+							}
+							if(i - l >= 0 && j - k >= 0 ){
+								pixelValueR += image.getMatrix()[0][j-k][i-l] * matrixSpace[center-k][center-l];
+                                                                pixelValueG += image.getMatrix()[1][j-k][i-l] * matrixSpace[center-k][center-l];
+                                                                pixelValueB += image.getMatrix()[2][j-k][i-l] * matrixSpace[center-k][center-l];
+								pixelsReaden++;
+							}
+						}
+							
+						else if(k != 0){
+							if(j + k < image.getHeight()){
+								pixelValueR += image.getMatrix()[0][j+k][i] * matrixSpace[center+k][center];
+                                                                pixelValueG += image.getMatrix()[1][j+k][i] * matrixSpace[center+k][center];
+                                                                pixelValueB += image.getMatrix()[2][j+k][i] * matrixSpace[center+k][center];
+								pixelsReaden++;
+							}
+							if(j - k >= 0){
+								pixelValueR += image.getMatrix()[0][j-k][i] * matrixSpace[center-k][center];
+                                                                pixelValueG += image.getMatrix()[1][j-k][i] * matrixSpace[center-k][center];
+                                                                pixelValueB += image.getMatrix()[2][j-k][i] * matrixSpace[center-k][center];
+								pixelsReaden++;
+							}
+						}
+						
+						else if(l != 0){
+							if(i + l < image.getWidth()){
+								pixelValueR += image.getMatrix()[0][j][i+l] * matrixSpace[center][center+l];
+                                                                pixelValueG += image.getMatrix()[1][j][i+l] * matrixSpace[center][center+l];
+                                                                pixelValueB += image.getMatrix()[2][j][i+l] * matrixSpace[center][center+l];
+								pixelsReaden++;
+							}
+							if(i - l >= 0){
+								pixelValueR += image.getMatrix()[0][j][i-l] * matrixSpace[center][center-l];
+                                                                pixelValueG += image.getMatrix()[1][j][i-l] * matrixSpace[center][center-l];
+                                                                pixelValueB += image.getMatrix()[2][j][i-l] * matrixSpace[center][center-l];
+								pixelsReaden++;
+							}
+						}
+						else{
+							pixelValueR += image.getMatrix()[0][j][i] * matrixSpace[center][center];
+                                                        pixelValueG += image.getMatrix()[1][j][i] * matrixSpace[center][center];
+                                                        pixelValueB += image.getMatrix()[2][j][i] * matrixSpace[center][center];
+							pixelsReaden++;
+						}
+					}
+				matrix[0][j][i] = Math.round(pixelValueR / (float) pixelsReaden);
+                                matrix[1][j][i] = Math.round(pixelValueG / (float) pixelsReaden);
+                                matrix[2][j][i] = Math.round(pixelValueB / (float) pixelsReaden);
+				if(matrix[0][j][i] < 0)
+					matrix[0][j][i] = 0;
+                                if(matrix[1][j][i] < 0)
+					matrix[1][j][i] = 0;
+                                if(matrix[2][j][i] < 0)
+					matrix[2][j][i] = 0;
+			}
+		}
+		PPM retorno = new PPM(image.getType(), image.getWidth(), image.getHeight(), image.getMaxScale());
+		retorno.setMatrix(matrix);
+                
+                return retorno;
+	}
+	
+	public static PGM Laplacian(PGM image, int filtro){
+		int matrixSpace[][] = null;
+		switch(filtro){
+			case 4:
+				matrixSpace = new int[][]{
+					{0,-1,0},
+					{-1,4,-1},
+					{0,-1,0}};
+				break;
+			case -4:
+				matrixSpace = new int[][]{
+					{0,1,0},
+					{1,-4,1},
+					{0,1,0}};
+				break;
+			case 8:
+				matrixSpace = new int[][]{
+					{-1,-1,-1},
+					{-1,8,-1},
+					{-1,-1,-1}};
+				break;
+			case -8:
+				matrixSpace = new int[][]{
+					{1,1,1},
+					{1,8,1},
+					{1,1,1}};
+				break;
+		}
+                return spacialFilter(image, matrixSpace);
+	}
+        
+        public static PPM Laplacian(PPM image, int filtro){
+		int matrixSpace[][] = null;
+		switch(filtro){
+			case 4:
+				matrixSpace = new int[][]{
+					{0,-1,0},
+					{-1,4,-1},
+					{0,-1,0}};
+				break;
+			case -4:
+				matrixSpace = new int[][]{
+					{0,1,0},
+					{1,-4,1},
+					{0,1,0}};
+				break;
+			case 8:
+				matrixSpace = new int[][]{
+					{-1,-1,-1},
+					{-1,8,-1},
+					{-1,-1,-1}};
+				break;
+			case -8:
+				matrixSpace = new int[][]{
+					{1,1,1},
+					{1,8,1},
+					{1,1,1}};
+				break;
+		}
+                return spacialFilter(image, matrixSpace);
+	}
 
 }
