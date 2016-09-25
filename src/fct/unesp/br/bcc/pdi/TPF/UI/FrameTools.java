@@ -1,5 +1,6 @@
 package fct.unesp.br.bcc.pdi.TPF.UI;
 
+import fct.unesp.br.bcc.pdi.TPF.code.PNMManager;
 import java.awt.Color;
 import javax.swing.JFrame;
 
@@ -7,27 +8,24 @@ public class FrameTools extends JFrame{
 	
 	private static final long serialVersionUID = -3450138015387473519L;
 	
-	GeneralJPanel mainPanel;
-	
-	public FrameTools(){
+	private GeneralJPanel mainPanel;
+        private Frame mainFrame;
+        
+	public FrameTools(PNMManager manager, Frame mainFrame){
 		super();
-		init();
+		init(manager, mainFrame);
 	}
 	
-	private void init(){
+	private void init(PNMManager manager, Frame mainFrame){
 		setResizable(true);
 		setBackground(Color.WHITE);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setTitle("Ferramentas");
 		setSize(500, 400);		
 		
 		mainPanel = new MainPanel();
-                add(new ToolsPanel());
+                add(new ToolsPanel(manager, mainFrame));
 		
 		setVisible(true);
-	}
-	
-	public static void main(String args[]){
-		new FrameTools();
 	}
 }

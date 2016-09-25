@@ -1,10 +1,13 @@
 package fct.unesp.br.bcc.pdi.TPF.UI;
 
+import fct.unesp.br.bcc.pdi.TPF.fileTypes.PGM;
+import fct.unesp.br.bcc.pdi.TPF.fileTypes.PNM;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Action;
 
 import javax.swing.GroupLayout.Group;
 import javax.swing.JButton;
@@ -33,6 +36,8 @@ public class MenuPanel extends GeneralJPanel{
 	private JButton buttonSave;
 	private JButton buttonExportChannels;
         private JButton ferramentasButton;
+        private JButton desfazerButton;
+        private JButton refazerButton;
        
 	
 	@Override
@@ -42,6 +47,9 @@ public class MenuPanel extends GeneralJPanel{
 		buttonSave = new JButton("Salvar");
 		buttonExportChannels = new JButton("Exportar");
                 ferramentasButton = new JButton("Ferramentas");
+                desfazerButton = new JButton("Desfazer");
+                refazerButton = new JButton("Refazer");
+                
                 
 		/*
 		menuBar = new JMenuBar();
@@ -75,6 +83,8 @@ public class MenuPanel extends GeneralJPanel{
 		buttonOpen.setToolTipText("Open");
 		buttonSave.setToolTipText("Save As");
 		buttonExportChannels.setToolTipText("Export Channel");
+                desfazerButton.setToolTipText("Desfazer");
+                refazerButton.setToolTipText("Refazer");
                 
 		buttonOpen.addActionListener(new ActionListener() {
 			
@@ -95,9 +105,10 @@ public class MenuPanel extends GeneralJPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
                             try {
+                                PNM image = ((Frame)getTopLevelAncestor()).getImage();
                                 JFileChooser JFC = new JFileChooser();
                                 FileNameExtensionFilter extensionFilter =
-                                        new FileNameExtensionFilter("PNM", "pgm", "ppm");
+                                        new FileNameExtensionFilter("PNM", (image instanceof PGM)?"pgm":"ppm");
                                 JFC.setFileFilter(extensionFilter);
                                 JFC.setFileSelectionMode(JFileChooser.FILES_ONLY);
                                 if(JFC.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
@@ -114,6 +125,28 @@ public class MenuPanel extends GeneralJPanel{
                         new FrameExport(((Frame)getTopLevelAncestor()).getImage());
                     }
                 });
+                
+                ferramentasButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        new FrameTools(
+                                ((Frame)getTopLevelAncestor()).getManager(), ((Frame)getTopLevelAncestor()));
+                    }
+                });
+                
+                desfazerButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        ((Frame)getTopLevelAncestor()).undo();
+                    }
+                });
+                
+                refazerButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        ((Frame)getTopLevelAncestor()).redo();
+                    }
+                });
 	}
 
 	@Override
@@ -126,7 +159,9 @@ public class MenuPanel extends GeneralJPanel{
 			.addComponent(buttonOpen, 20,20,20)
 			.addComponent(buttonSave, 20,20,20)
 			.addComponent(buttonExportChannels, 20,20,20)
-                        .addComponent(ferramentasButton,20,20,20));
+                        .addComponent(ferramentasButton,20,20,20)
+                        .addComponent(desfazerButton,20,20,20)
+                        .addComponent(refazerButton,20,20,20));
 		
 		horizontalGroup.addGap(5);
 		horizontalGroup.addComponent(buttonOpen);
@@ -136,6 +171,10 @@ public class MenuPanel extends GeneralJPanel{
 		horizontalGroup.addComponent(buttonExportChannels);
                 horizontalGroup.addGap(5)
                 .addComponent(ferramentasButton);
+                horizontalGroup.addGap(5)
+                .addComponent(desfazerButton);
+                horizontalGroup.addGap(5)
+                .addComponent(refazerButton);
 		
 		setVerticalGroup(verticalGroup);
 		setHorizontalGroup(horizontalGroup);

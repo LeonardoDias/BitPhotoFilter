@@ -19,6 +19,10 @@ public class MainPanel extends GeneralJPanel{
 	private GeneralJPanel menuPanel;
 	private Frame GUIFrame;
 	
+        
+        public PNMManager getManager(){
+            return manager;
+        }
 	@Override
 	public void init() {
 		manager = new PNMManager();

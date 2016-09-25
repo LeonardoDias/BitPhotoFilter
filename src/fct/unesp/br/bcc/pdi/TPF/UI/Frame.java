@@ -1,5 +1,6 @@
 package fct.unesp.br.bcc.pdi.TPF.UI;
 
+import fct.unesp.br.bcc.pdi.TPF.code.PNMManager;
 import fct.unesp.br.bcc.pdi.TPF.fileTypes.PNM;
 import java.awt.Color;
 import java.io.IOException;
@@ -39,8 +40,26 @@ public class Frame extends JFrame{
         public PNM getImage(){
             return ((MainPanel)mainPanel).getImage();
         }
+        
+        public PNMManager getManager(){
+            return ((MainPanel)mainPanel).getManager();
+        }
 	
 	public static void main(String args[]){
 		new Frame();
 	}
+
+        void updateImage(){
+            ((MainPanel)mainPanel).updateImage();
+        }
+
+        void undo() {
+            ((MainPanel)mainPanel).getManager().undo();
+            updateImage();
+        }
+        
+        void redo(){
+            ((MainPanel)mainPanel).getManager().redo();
+            updateImage();
+        }
 }

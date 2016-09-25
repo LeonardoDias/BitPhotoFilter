@@ -51,7 +51,6 @@ public class PNMManager {
 			images.remove(images.size() - 1);
 		imagesPointer++;
 		images.add(image);
-		
 	}
 	
 	public PNM getImage(){
@@ -218,6 +217,74 @@ public class PNMManager {
 				DigitalProccessing.light( ((PPM)getImage()), quantity, DigitalProccessing.channelB) );
 		
 	}
+        
+        public void dark(int quantity){
+		if(getImage() instanceof PGM)
+			addImage(	
+				DigitalProccessing.light( ((PGM)getImage()), quantity) );
+		else
+			addImage(	
+				DigitalProccessing.dark( ((PPM)getImage()), quantity) );
+	}
+	
+	public void dark(float quantity){
+		if(getImage() instanceof PGM)
+			addImage(	
+				DigitalProccessing.dark( ((PGM)getImage()), quantity) );
+		else
+			addImage(	
+				DigitalProccessing.dark( ((PPM)getImage()), quantity) );
+	}
+        
+        public void spacialFilter(int value){
+            int matrix[][] = new int[value][value];
+            for(int i = 0; i < value;i++)
+                for(int j = 0; j < value;j++)
+                    matrix[i][j] = 1;
+            
+            if(getImage() instanceof PGM)
+			addImage(	
+				DigitalProccessing.spacialFilter( ((PGM)getImage()), matrix) );
+		else
+			addImage(	
+				DigitalProccessing.spacialFilter( ((PPM)getImage()), matrix) );
+        }
+        
+        public void laplace4(){
+            if(getImage() instanceof PGM)
+			addImage(	
+				DigitalProccessing.Laplacian( ((PGM)getImage()), 4) );
+		else
+			addImage(	
+				DigitalProccessing.Laplacian( ((PPM)getImage()), 4) );
+        }
+        
+        public void laplaceMinus4(){
+            if(getImage() instanceof PGM)
+			addImage(	
+				DigitalProccessing.Laplacian( ((PGM)getImage()), -4) );
+		else
+			addImage(	
+				DigitalProccessing.Laplacian( ((PPM)getImage()), -4) );
+        }
+        
+        public void laplace8(){
+            if(getImage() instanceof PGM)
+			addImage(	
+				DigitalProccessing.Laplacian( ((PGM)getImage()), 8) );
+		else
+			addImage(	
+				DigitalProccessing.Laplacian( ((PPM)getImage()), 8) );
+        }
+        
+        public void laplaceMinus8(){
+            if(getImage() instanceof PGM)
+			addImage(	
+				DigitalProccessing.Laplacian( ((PGM)getImage()), -8) );
+		else
+			addImage(	
+				DigitalProccessing.Laplacian( ((PPM)getImage()), -8) );
+        }
 	
 	public void saveImage(String file) throws IOException{
 		getImage().saveFile(file);

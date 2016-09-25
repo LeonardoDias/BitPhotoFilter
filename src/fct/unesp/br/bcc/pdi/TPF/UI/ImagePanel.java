@@ -84,6 +84,8 @@ public class ImagePanel extends GeneralJPanel implements Runnable{
 			}
 			hasAlteration = false;
 		}
+                getGraphics().setColor(Color.WHITE);
+                getGraphics().fillRect(0, 0, getSize().width, getSize().height);
 		getGraphics().drawImage(image, (getSize().width - image.getWidth())/2, 
 				(getSize().height - image.getHeight())/2, 
 				null);

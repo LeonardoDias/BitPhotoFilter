@@ -5,6 +5,9 @@
  */
 package fct.unesp.br.bcc.pdi.TPF.UI;
 
+import fct.unesp.br.bcc.pdi.TPF.code.PNMManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
@@ -22,6 +25,10 @@ import javax.swing.SwingConstants;
  */
 public class ToolsPanel extends GeneralJPanel{
 
+    
+    private PNMManager manager;
+    private Frame mainFrame;
+    
     /*
         Flip and Rotate
     */
@@ -31,7 +38,6 @@ public class ToolsPanel extends GeneralJPanel{
     private JButton rotate90Button;
     private JButton rotateMinus90Button;
     private JButton rotate180Button;
-    private JButton rotateMinus180Button;
     private JSeparator rotateSeparator;
     
     /*
@@ -73,15 +79,6 @@ public class ToolsPanel extends GeneralJPanel{
     private JSeparator blurSeparator;
     
     /*
-        Transformações Lineares
-    */
-    private JLabel transformacoesLabel;
-    private JButton transformacoesLogaritmaButton;
-    private JSpinner transformacoesGamaSpinner;
-    private JButton transformacoesGamaButton;
-    private JSeparator transformacoesSeparator;
-    
-    /*
         Botões
     */
     
@@ -90,6 +87,13 @@ public class ToolsPanel extends GeneralJPanel{
     private JButton laplaceMinus4Button;
     private JButton laplace8Button;
     private JButton laplaceMinus8Button;
+    
+    
+    public ToolsPanel(PNMManager manager, Frame mainFrame){
+        super();
+        this.manager = manager;
+        this.mainFrame = mainFrame;
+    }
     
     @Override
     public void init() {
@@ -106,8 +110,7 @@ public class ToolsPanel extends GeneralJPanel{
         flipVerticalButton = new JButton("Flip Vertical");
         rotate90Button = new JButton("Rotacionar 90º");
         rotateMinus90Button = new JButton("Rotacionar -90º");
-        rotate180Button = new JButton("Rotacionar 180º");
-        rotateMinus180Button = new JButton("Rotacionar -180º");    
+        rotate180Button = new JButton("Rotacionar 180º");   
         rotateSeparator = new JSeparator();
         
         /*
@@ -144,7 +147,7 @@ public class ToolsPanel extends GeneralJPanel{
         */
         
         escalaLabel = new JLabel("Escala");
-        escalaSpinner = new JSpinner(new SpinnerNumberModel(1, 0.1, 99, 0.1));
+        escalaSpinner = new JSpinner(new SpinnerNumberModel(1, 0.2f, 99, 0.1f));
         escalaButton = new JButton("Aplicar");
         
         escalaSeparator = new JSeparator(SwingConstants.HORIZONTAL);
@@ -154,20 +157,11 @@ public class ToolsPanel extends GeneralJPanel{
         */
         
         blurLabel = new JLabel("Borrar (Filtro da média)");
-        blurSpinner = new JSpinner(new SpinnerNumberModel(1,1,99,1));
+        blurSpinner = new JSpinner(new SpinnerNumberModel(3,3,99,2));
         blurButton = new JButton("Aplicar");
         
         blurSeparator = new JSeparator(SwingConstants.HORIZONTAL);
-        
-        /*
-            Transformações Lineares
-        */
-        
-        transformacoesLabel = new JLabel("Transformações Lineares");
-        transformacoesLogaritmaButton = new JButton("Log");
-        transformacoesGamaSpinner = new JSpinner(new SpinnerNumberModel(1.0, 0.01, 99, 0.01));
-        transformacoesGamaButton = new JButton("Gama");
-        transformacoesSeparator = new JSeparator(SwingConstants.HORIZONTAL);
+       
         /*
             Botões
         */
@@ -177,6 +171,133 @@ public class ToolsPanel extends GeneralJPanel{
         laplace8Button = new JButton("Laplace 8");
         laplaceMinus8Button = new JButton("Laplace -8");
         
+        
+        flipHorizontalButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                manager.flipHorizontal();
+                mainFrame.updateImage();
+            }
+        });
+        
+        flipVerticalButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                manager.flipVertical();
+                mainFrame.updateImage();
+            }
+        });
+        
+        rotate90Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                manager.rotate90Degrees();
+                mainFrame.updateImage();
+            }
+        });
+        
+        rotate180Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                manager.rotate180Degrees();
+                mainFrame.updateImage();
+            }
+        });
+        
+        rotateMinus90Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                manager.rotateMinus90Degrees();
+                mainFrame.updateImage();
+            }
+        });
+        
+        binarizarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                manager.binarizationByPoint((int)binarizarSpinner.getValue());
+                mainFrame.updateImage();
+            }
+        });
+        
+        brilhoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if((Integer)brilhoSpinner.getValue() >= 0){
+                    if(radioBrilhoAdicionar.isSelected()){
+                        manager.light((Integer)brilhoSpinner.getValue());
+                    }else{
+                        manager.light((Integer)brilhoSpinner.getValue()*1f);
+                    }
+                }else{
+                    if(radioBrilhoAdicionar.isSelected()){
+                        manager.dark(-(Integer)brilhoSpinner.getValue());
+                    }else{
+                        manager.dark(-(Integer)brilhoSpinner.getValue()*1f);
+                    }
+                }
+                mainFrame.updateImage();
+            }
+        });
+        
+        escalaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if((double)escalaSpinner.getValue()>=1)
+                    manager.enlargeScaleResolutionIn((float)((double)escalaSpinner.getValue()));
+                else
+                    manager.compressScaleResolutionIn((float)Math.pow((double)escalaSpinner.getValue(),-1));
+                mainFrame.updateImage();
+            }
+        });
+        
+        blurButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                manager.spacialFilter((int)blurSpinner.getValue());
+                mainFrame.updateImage();
+            }
+        });
+        
+        negativoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                manager.negative();
+                mainFrame.updateImage();
+            }
+        });
+        
+        laplace4Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                manager.laplace4();
+                mainFrame.updateImage();
+            }
+        });
+        
+        laplace8Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                manager.laplace8();
+                mainFrame.updateImage();
+            }
+        });
+        
+        laplaceMinus4Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                manager.laplaceMinus4();
+                mainFrame.updateImage();
+            }
+        });
+        
+        laplaceMinus8Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                manager.laplaceMinus8();
+                mainFrame.updateImage();
+            }
+        });
     }
 
     @Override
@@ -192,8 +313,7 @@ public class ToolsPanel extends GeneralJPanel{
         .addGroup(layout.createParallelGroup()
             .addComponent(rotate90Button,25,25,25)
             .addComponent(rotateMinus90Button,25,25,25)
-            .addComponent(rotate180Button,25,25,25)
-            .addComponent(rotateMinus180Button,25,25,25))
+            .addComponent(rotate180Button,25,25,25))
         .addGap(10)
         .addComponent(rotateSeparator,5,5,5)
         .addGap(10)
@@ -232,13 +352,6 @@ public class ToolsPanel extends GeneralJPanel{
         .addGap(10)        
         .addComponent(blurSeparator,5,5,5)
         .addGap(10)
-                
-        .addComponent(transformacoesLabel,25,25,25)
-        .addComponent(transformacoesLogaritmaButton,25,25,25)
-        .addGroup(layout.createParallelGroup()
-            .addComponent(transformacoesGamaSpinner,25,25,25)
-            .addComponent(transformacoesGamaButton,25,25,25))
-        .addGap(10)
         
         .addGap(10)
         .addGroup(layout.createParallelGroup()
@@ -258,8 +371,7 @@ public class ToolsPanel extends GeneralJPanel{
         .addGroup(layout.createSequentialGroup()
             .addComponent(rotate90Button)
             .addComponent(rotateMinus90Button)
-            .addComponent(rotate180Button)
-            .addComponent(rotateMinus180Button))
+            .addComponent(rotate180Button))
         .addComponent(rotateSeparator)
                 
         .addGroup(layout.createSequentialGroup()
@@ -293,11 +405,6 @@ public class ToolsPanel extends GeneralJPanel{
             .addComponent(blurButton))
         .addComponent(blurSeparator)
                 
-        .addComponent(transformacoesLabel)
-        .addComponent(transformacoesLogaritmaButton)
-        .addGroup(layout.createSequentialGroup()
-            .addComponent(transformacoesGamaSpinner,100,100,100)
-            .addComponent(transformacoesGamaButton))
         .addGroup(layout.createSequentialGroup()
             .addComponent(negativoButton)                
             .addComponent(laplace4Button)
@@ -310,6 +417,11 @@ public class ToolsPanel extends GeneralJPanel{
         
         setVerticalGroup(verticalGroup);
         setHorizontalGroup(horizontalGroup);
+    }
+    
+    public ToolsPanel setManager(PNMManager manager){
+        this.manager = manager;
+        return this;
     }
     
 }
