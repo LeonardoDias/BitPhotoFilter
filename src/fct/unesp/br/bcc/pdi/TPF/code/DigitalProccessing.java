@@ -1,5 +1,6 @@
 package fct.unesp.br.bcc.pdi.TPF.code;
 
+import fct.unesp.br.bcc.pdi.TPF.exceptions.InvalidHistogramException;
 import java.security.InvalidParameterException;
 
 import fct.unesp.br.bcc.pdi.TPF.fileTypes.PGM;
@@ -573,6 +574,39 @@ public class DigitalProccessing {
                 
                 return retorno;
 	}
+        
+        public static PGM equalize(PGM image){
+            image.setHistogram();
+            int vetorEqualizacao[] = image.getHistogramEqualizationVector();
+            
+            int matrix[][] = new int[image.getHeight()][image.getWidth()];
+		for (int j = 0; j < image.getHeight(); j++ )
+			for(int i = 0; i < image.getWidth(); i++)
+				matrix[j][i] = vetorEqualizacao[image.getMatrix()[j][i]];
+                
+		PGM retorno = new PGM(image.getType(), image.getWidth(), image.getHeight(), image.getMaxScale());
+		retorno.setMatrix(matrix);
+                
+                return retorno;
+        }
+        
+        public static PPM equalize(PPM image) throws InvalidHistogramException{
+            image.setHistogram();
+            int vetorEqualizacao[][] = image.getHistogramEqualizationVector();
+            
+            int matrix[][][] = new int[3][image.getHeight()][image.getWidth()];
+		for (int j = 0; j < image.getHeight(); j++ )
+			for(int i = 0; i < image.getWidth(); i++){
+                            matrix[0][j][i] = vetorEqualizacao[0][image.getMatrix()[0][j][i]];
+                            matrix[1][j][i] = vetorEqualizacao[1][image.getMatrix()[1][j][i]];
+                            matrix[2][j][i] = vetorEqualizacao[2][image.getMatrix()[2][j][i]];
+                        }
+                
+		PPM retorno = new PPM(image.getType(), image.getWidth(), image.getHeight(), image.getMaxScale());
+		retorno.setMatrix(matrix);
+                
+                return retorno;
+        }
         
         public static PGM spacialFilter(PGM image, int[][] matrixSpace){
 		int matrix[][] = new int[image.getHeight()][image.getWidth()];//image.getMatrix();

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import fct.unesp.br.bcc.pdi.TPF.exceptions.InvalidFileException;
+import fct.unesp.br.bcc.pdi.TPF.exceptions.InvalidHistogramException;
 import fct.unesp.br.bcc.pdi.TPF.exceptions.InvalidTypeException;
 import fct.unesp.br.bcc.pdi.TPF.fileTypes.PGM;
 import fct.unesp.br.bcc.pdi.TPF.fileTypes.PNM;
@@ -325,5 +326,14 @@ public class PNMManager {
 			throw new InvalidTypeException();
 		((PPM)getImage()).saveFileMagent(file);
 	}
+
+        public void equalizarHistograma() throws InvalidHistogramException {
+            if(getImage() instanceof PGM)
+			addImage(	
+				DigitalProccessing.equalize( (PGM)getImage()) );
+		else
+			addImage(	
+				DigitalProccessing.equalize((PPM)getImage()));
+        }
 
 }

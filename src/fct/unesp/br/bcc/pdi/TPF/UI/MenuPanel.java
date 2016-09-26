@@ -1,5 +1,6 @@
 package fct.unesp.br.bcc.pdi.TPF.UI;
 
+import fct.unesp.br.bcc.pdi.TPF.exceptions.InvalidHistogramException;
 import fct.unesp.br.bcc.pdi.TPF.fileTypes.PGM;
 import fct.unesp.br.bcc.pdi.TPF.fileTypes.PNM;
 import java.awt.event.ActionEvent;
@@ -38,7 +39,7 @@ public class MenuPanel extends GeneralJPanel{
         private JButton ferramentasButton;
         private JButton desfazerButton;
         private JButton refazerButton;
-       
+        private JButton histogramaButton;
 	
 	@Override
 	public void init() {
@@ -49,7 +50,7 @@ public class MenuPanel extends GeneralJPanel{
                 ferramentasButton = new JButton("Ferramentas");
                 desfazerButton = new JButton("Desfazer");
                 refazerButton = new JButton("Refazer");
-                
+                histogramaButton = new JButton("Equalizar Histograma");
                 
 		/*
 		menuBar = new JMenuBar();
@@ -147,6 +148,17 @@ public class MenuPanel extends GeneralJPanel{
                         ((Frame)getTopLevelAncestor()).redo();
                     }
                 });
+                
+                histogramaButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            ((Frame)getTopLevelAncestor()).equalizar();
+                        } catch (InvalidHistogramException ex) {
+                            Logger.getLogger(MenuPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                });
 	}
 
 	@Override
@@ -161,7 +173,8 @@ public class MenuPanel extends GeneralJPanel{
 			.addComponent(buttonExportChannels, 20,20,20)
                         .addComponent(ferramentasButton,20,20,20)
                         .addComponent(desfazerButton,20,20,20)
-                        .addComponent(refazerButton,20,20,20));
+                        .addComponent(refazerButton,20,20,20)
+                        .addComponent(histogramaButton,20,20,20));
 		
 		horizontalGroup.addGap(5);
 		horizontalGroup.addComponent(buttonOpen);
@@ -175,6 +188,8 @@ public class MenuPanel extends GeneralJPanel{
                 .addComponent(desfazerButton);
                 horizontalGroup.addGap(5)
                 .addComponent(refazerButton);
+                horizontalGroup.addGap(5)
+                .addComponent(histogramaButton);
 		
 		setVerticalGroup(verticalGroup);
 		setHorizontalGroup(horizontalGroup);

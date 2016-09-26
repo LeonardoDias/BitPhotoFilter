@@ -93,6 +93,7 @@ public class Histogram {
 	public int[] getGrayHistogramEqualization() throws InvalidHistogramException{
 		if(type == RGB)
 			throw new InvalidHistogramException();
+                int maxScale = this.maxScale+1;
 		double[] equalization = new double[maxScale];
 		equalization[0] = ((double)(maxScale-1) * ((double)gray[0]/(double)totalPixels));
 		for(int i = 1; i < maxScale; i++){
@@ -110,6 +111,7 @@ public class Histogram {
 	public int[] getRedHistogramEqualization() throws InvalidHistogramException{
 		if(type == GRAY)
 			throw new InvalidHistogramException();
+                int maxScale = this.maxScale+1;
 		double[] equalization = new double[maxScale];
 		equalization[0] = ((double)(maxScale-1) * ((double)rgb[0][0]/(double)totalPixels));
 		for(int i = 1; i < maxScale; i++){

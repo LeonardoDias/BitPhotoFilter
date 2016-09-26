@@ -1,6 +1,7 @@
 package fct.unesp.br.bcc.pdi.TPF.UI;
 
 import fct.unesp.br.bcc.pdi.TPF.code.PNMManager;
+import fct.unesp.br.bcc.pdi.TPF.exceptions.InvalidHistogramException;
 import fct.unesp.br.bcc.pdi.TPF.fileTypes.PNM;
 import java.awt.Color;
 import java.io.IOException;
@@ -60,6 +61,11 @@ public class Frame extends JFrame{
         
         void redo(){
             ((MainPanel)mainPanel).getManager().redo();
+            updateImage();
+        }
+
+        void equalizar() throws InvalidHistogramException {
+            ((MainPanel)mainPanel).getManager().equalizarHistograma();
             updateImage();
         }
 }

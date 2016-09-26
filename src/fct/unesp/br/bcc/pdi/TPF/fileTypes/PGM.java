@@ -21,6 +21,7 @@ public class PGM extends PNM{
 			throw new InvalidParameterException("maxScale value must be greater than 0 and lesser than 65536");
 		this.maxScale = maxScale;
 		Matrix = new int[height][width];
+                histogram = new Histogram(getMaxScale(), Histogram.GRAY, getWidth()*getHeight());
 	}
 	
 	public PGM(String file) throws IOException, InvalidFileException {
@@ -113,7 +114,7 @@ public class PGM extends PNM{
 	
 	public int[] getHistogram(){
 		try{
-		return histogram.getGrayHistogram();
+                    return histogram.getGrayHistogram();
 		}catch(InvalidHistogramException e){
 			e.printStackTrace();
 			return null;
@@ -122,7 +123,7 @@ public class PGM extends PNM{
 	
 	public int[] getHistogramEqualizationVector(){
 		try{
-		return histogram.getGrayHistogramEqualization();
+                    return histogram.getGrayHistogramEqualization();
 		}catch(InvalidHistogramException e){
 			e.printStackTrace();
 			return null;

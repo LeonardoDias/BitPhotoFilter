@@ -21,6 +21,8 @@ public class PPM extends PNM{
 			throw new InvalidParameterException("maxScale value must be greater than 0 and lesser than 65536");
 		this.maxScale = maxScale;
 		Matrix = new int[height][width][3];
+                histogram = new Histogram(getMaxScale(), Histogram.RGB, getWidth()*getHeight());
+		setHistogram();
 	}
 	
 	public PPM(String file) throws IOException {
@@ -197,12 +199,12 @@ public class PPM extends PNM{
 	}
 
 	public void setHistogram() {
-		int tempHistogram[][] = new int [getMaxScale()+1][3];
+		int tempHistogram[][] = new int [3][getMaxScale()+1];
 		for(int j = 0; j < getHeight(); j++)
 			for(int i = 0; i < getWidth(); i++){
-				tempHistogram[Matrix[0][j][i]][0]++;
-				tempHistogram[Matrix[1][j][i]][1]++;
-				tempHistogram[Matrix[2][j][i]][2]++;
+				tempHistogram[0][Matrix[0][j][i]]++;
+				tempHistogram[1][Matrix[1][j][i]]++;
+				tempHistogram[2][Matrix[2][j][i]]++;
 			}
 		try{
 			histogram.setHistogram(tempHistogram);
@@ -241,5 +243,14 @@ public class PPM extends PNM{
 	public void setMaxScale(int maxScale) {
 		this.maxScale = maxScale;
 	}
+
+        public int[][] getHistogramEqualizationVector() throws InvalidHistogramException {
+            int equalizationVector[][] = new int[3][getMaxScale()];
+            equalizationVector[0] = histogram.getRedHistogramEqualization();
+            equalizationVector[1] = histogram.getRedHistogramEqualization();
+            equalizationVector[2] = histogram.getRedHistogramEqualization();
+            
+            return equalizationVector;
+        }
 
 }
